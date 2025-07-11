@@ -58,6 +58,8 @@ Cada carpeta contiene su propio `README.md` con instrucciones específicas para 
 - Roque Quispe William Isaias
 - Congona Manrique Mauricio Elías
 
+## Institución
+
 - Universidad Nacional de San Agustin
 
 ## Licencia
