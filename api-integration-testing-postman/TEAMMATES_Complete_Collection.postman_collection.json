@@ -1,0 +1,1168 @@
+{
+	"info": {
+		"_postman_id": "575426ea-4794-43ba-88cd-dfd9094b2f44",
+		"name": "TEAMMATES API Collection",
+		"description": "Comprehensive collection for TEAMMATES API endpoints with backdoor key authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46689549"
+	},
+	"item": [
+		{
+			"name": "🔧 Admin Management",
+			"item": [
+				{
+					"name": "Get Account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Account data is present', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('googleId');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/account?instructorid={{admin_user}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"account"
+							],
+							"query": [
+								{
+									"key": "instructorid",
+									"value": "{{admin_user}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Accounts by Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Accounts array is present', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('accounts');",
+									"    pm.expect(jsonData.accounts).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/accounts?useremail={{admin_user}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"accounts"
+							],
+							"query": [
+								{
+									"key": "useremail",
+									"value": "{{admin_user}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ongoing Sessions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Ongoing sessions data is present', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('sessions');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/sessions/ongoing?starttime=0&endtime=9999999999999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"sessions",
+								"ongoing"
+							],
+							"query": [
+								{
+									"key": "starttime",
+									"value": "0"
+								},
+								{
+									"key": "endtime",
+									"value": "9999999999999"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Action Classes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Action classes data is present', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('actionClasses');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/actionclass",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"actionclass"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Usage Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/usagestats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"usagestats"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📚 Course Management",
+			"item": [
+				{
+					"name": "Get All Courses",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Courses data is present', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('courses');",
+									"    pm.expect(jsonData.courses).to.be.an('array');",
+									"});",
+									"",
+									"// Store first course ID for other requests",
+									"if (pm.response.code === 200) {",
+									"    const courses = pm.response.json().courses;",
+									"    if (courses && courses.length > 0) {",
+									"        pm.environment.set('first_course_id', courses[0].courseId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/courses?entitytype=instructor&coursestatus=active",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"courses"
+							],
+							"query": [
+								{
+									"key": "entitytype",
+									"value": "instructor"
+								},
+								{
+									"key": "coursestatus",
+									"value": "active"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Course Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Course details are present', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('courseId');",
+									"    pm.expect(jsonData).to.have.property('courseName');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/course?courseid={{test_course_id}}&entitytype=instructor",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"course"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "entitytype",
+									"value": "instructor"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Course",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate unique course ID",
+									"const timestamp = Date.now();",
+									"pm.environment.set('new_course_id', 'test-course-' + timestamp);",
+									"",
+									"// Update request body with unique values",
+									"const body = JSON.parse(pm.request.body.raw);",
+									"body.courseId = 'test-course-' + timestamp;",
+									"body.courseName = 'Test Course ' + timestamp;",
+									"pm.request.body.raw = JSON.stringify(body, null, 2);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    pm.test('Course created successfully', function () {",
+									"        const jsonData = pm.response.json();",
+									"        pm.expect(jsonData).to.have.property('courseId');",
+									"    });",
+									"    ",
+									"    // Store created course ID",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData && jsonData.courseId) {",
+									"        pm.environment.set('created_course_id', jsonData.courseId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"courseId\": \"test-course-{{current_timestamp}}\",\n  \"courseName\": \"Test Course {{current_timestamp}}\",\n  \"timeZone\": \"UTC\",\n  \"institute\": \"Test Institute\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/webapi/course",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"course"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Course Sections",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/course/sections?courseid={{test_course_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"course",
+								"sections"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👥 Student Management",
+			"item": [
+				{
+					"name": "Get Students",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Students data is present', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('students');",
+									"    pm.expect(jsonData.students).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/students?courseid={{test_course_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"students"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Student Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/student?courseid={{test_course_id}}&studentemail={{test_student_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"student"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "studentemail",
+									"value": "{{test_student_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Student",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"courseId\": \"{{test_course_id}}\",\n  \"name\": \"Test Student {{current_timestamp}}\",\n  \"email\": \"test.student.{{current_timestamp}}@example.com\",\n  \"section\": \"Section 1\",\n  \"team\": \"Team 1\",\n  \"comments\": \"Created via API test\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/webapi/student",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/search/students?searchkey=student&entitytype=instructor",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"search",
+								"students"
+							],
+							"query": [
+								{
+									"key": "searchkey",
+									"value": "student"
+								},
+								{
+									"key": "entitytype",
+									"value": "instructor"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "👨‍🏫 Instructor Management",
+			"item": [
+				{
+					"name": "Get Instructors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/instructors?courseid={{test_course_id}}&intent=full_detail",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"instructors"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "intent",
+									"value": "full_detail"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Instructor Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/instructor?courseid={{test_course_id}}&instructoremail={{test_instructor_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"instructor"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "instructoremail",
+									"value": "{{test_instructor_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Instructors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/search/instructors?searchkey=instructor",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"search",
+								"instructors"
+							],
+							"query": [
+								{
+									"key": "searchkey",
+									"value": "instructor"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📝 Feedback Sessions",
+			"item": [
+				{
+					"name": "Get All Sessions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/sessions?courseid={{test_course_id}}&entitytype=instructor",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"sessions"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "entitytype",
+									"value": "instructor"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Session Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/session?courseid={{test_course_id}}&fsname={{test_session_name}}&intent=full_detail",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"session"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "fsname",
+									"value": "{{test_session_name}}"
+								},
+								{
+									"key": "intent",
+									"value": "full_detail"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Feedback Session",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Calculate timestamps",
+									"const now = Date.now();",
+									"const startTime = now + (24 * 60 * 60 * 1000); // 1 day from now",
+									"const endTime = startTime + (7 * 24 * 60 * 60 * 1000); // 1 week duration",
+									"",
+									"// Update request body",
+									"const body = JSON.parse(pm.request.body.raw);",
+									"body.feedbackSessionName = 'Test Session ' + now;",
+									"body.submissionStartTimestamp = startTime;",
+									"body.submissionEndTimestamp = endTime;",
+									"body.customSessionVisibleTimestamp = now;",
+									"pm.request.body.raw = JSON.stringify(body, null, 2);",
+									"",
+									"pm.environment.set('new_session_name', 'Test Session ' + now);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"courseId\": \"{{test_course_id}}\",\n  \"feedbackSessionName\": \"Test Session {{current_timestamp}}\",\n  \"instructions\": \"Test feedback session created via API\",\n  \"submissionStartTimestamp\": {{current_timestamp}},\n  \"submissionEndTimestamp\": {{current_timestamp}},\n  \"gracePeriodMinutes\": 15,\n  \"sessionVisibleSetting\": \"CUSTOM\",\n  \"customSessionVisibleTimestamp\": {{current_timestamp}},\n  \"responseVisibleSetting\": \"LATER\",\n  \"isClosingEmailEnabled\": true,\n  \"isPublishedEmailEnabled\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/webapi/session",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"session"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Session Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/session/stats?courseid={{test_course_id}}&fsname={{test_session_name}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"session",
+								"stats"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "fsname",
+									"value": "{{test_session_name}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "❓ Questions & Responses",
+			"item": [
+				{
+					"name": "Get Questions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/questions?courseid={{test_course_id}}&fsname={{test_session_name}}&intent=full_detail",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"questions"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "fsname",
+									"value": "{{test_session_name}}"
+								},
+								{
+									"key": "intent",
+									"value": "full_detail"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Text Question",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"questionNumber\": 1,\n  \"questionBrief\": \"Test question brief\",\n  \"questionDescription\": \"Test question description {{current_timestamp}}\",\n  \"questionDetails\": {\n    \"questionType\": \"TEXT\",\n    \"questionText\": \"What do you think about this course?\"\n  },\n  \"questionType\": \"TEXT\",\n  \"giverType\": \"STUDENTS\",\n  \"recipientType\": \"INSTRUCTORS\",\n  \"numberOfEntitiesToGiveFeedbackToSetting\": \"UNLIMITED\",\n  \"showResponsesTo\": [\"INSTRUCTORS\"],\n  \"showGiverNameTo\": [],\n  \"showRecipientNameTo\": [\"INSTRUCTORS\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/webapi/question?courseid={{test_course_id}}&fsname={{test_session_name}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"question"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "fsname",
+									"value": "{{test_session_name}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Responses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/responses?courseid={{test_course_id}}&fsname={{test_session_name}}&intent=full_detail",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"responses"
+							],
+							"query": [
+								{
+									"key": "courseid",
+									"value": "{{test_course_id}}"
+								},
+								{
+									"key": "fsname",
+									"value": "{{test_session_name}}"
+								},
+								{
+									"key": "intent",
+									"value": "full_detail"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔔 Notifications",
+			"item": [
+				{
+					"name": "Get Notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/notifications",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"notifications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Notification",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Set notification end time to 7 days from now",
+									"const now = Date.now();",
+									"const endTime = now + (7 * 24 * 60 * 60 * 1000);",
+									"",
+									"const body = JSON.parse(pm.request.body.raw);",
+									"body.message = 'Test notification created at ' + new Date(now).toISOString();",
+									"body.endTimestamp = endTime;",
+									"pm.request.body.raw = JSON.stringify(body, null, 2);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"message\": \"Test notification created at {{current_timestamp}}\",\n  \"style\": \"INFO\",\n  \"targetUser\": \"ALL\",\n  \"startTimestamp\": {{current_timestamp}},\n  \"endTimestamp\": {{current_timestamp}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/webapi/notification",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"notification"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📊 Logs & Monitoring",
+			"item": [
+				{
+					"name": "Get Session Logs",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Set time range for logs (last 24 hours)",
+									"const now = Date.now();",
+									"const yesterday = now - (24 * 60 * 60 * 1000);",
+									"",
+									"pm.request.url.query.upsert({key: 'starttime', value: yesterday.toString()});",
+									"pm.request.url.query.upsert({key: 'endtime', value: now.toString()});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/logs/session?starttime={{current_timestamp}}&endtime={{current_timestamp}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"logs",
+								"session"
+							],
+							"query": [
+								{
+									"key": "starttime",
+									"value": "{{current_timestamp}}"
+								},
+								{
+									"key": "endtime",
+									"value": "{{current_timestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Query Logs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/logs/query?logType=REQUEST&starttime={{current_timestamp}}&endtime={{current_timestamp}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"logs",
+								"query"
+							],
+							"query": [
+								{
+									"key": "logType",
+									"value": "REQUEST"
+								},
+								{
+									"key": "starttime",
+									"value": "{{current_timestamp}}"
+								},
+								{
+									"key": "endtime",
+									"value": "{{current_timestamp}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔍 Search & Utility",
+			"item": [
+				{
+					"name": "Get Timezone",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/timezone",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"timezone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Exception Handling",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/webapi/exception?error=test",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webapi",
+								"exception"
+							],
+							"query": [
+								{
+									"key": "error",
+									"value": "test"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Service is accessible', function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 404, 405]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global Pre-request Script",
+					"console.log('🚀 Starting request to:', pm.request.url.toString());",
+					"",
+					"// Set current timestamp",
+					"pm.environment.set('current_timestamp', Date.now());",
+					"",
+					"// Add common headers",
+					"pm.request.headers.add({",
+					"    key: 'Backdoor-Key',",
+					"    value: pm.environment.get('backdoor_key')",
+					"});",
+					"",
+					"pm.request.headers.add({",
+					"    key: 'Content-Type',",
+					"    value: 'application/json'",
+					"});",
+					"",
+					"// Add user parameter if not already present",
+					"if (!pm.request.url.query.has('user')) {",
+					"    pm.request.url.query.add({",
+					"        key: 'user',",
+					"        value: pm.environment.get('admin_user')",
+					"    });",
+					"}",
+					"",
+					"// Log headers",
+					"console.log('📋 Headers:', pm.request.headers.toJSON());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global Post-response Script",
+					"const response = pm.response;",
+					"",
+					"// Store response time",
+					"pm.environment.set('response_time', pm.response.responseTime + 'ms');",
+					"",
+					"// Store request ID if present",
+					"if (pm.response.json() && pm.response.json().requestId) {",
+					"    pm.environment.set('request_id', pm.response.json().requestId);",
+					"}",
+					"",
+					"// Log response info",
+					"console.log('⏱️  Response time:', pm.response.responseTime + 'ms');",
+					"console.log('📊 Status:', pm.response.status, pm.response.code);",
+					"console.log('📝 Response size:', pm.response.responseSize + ' bytes');",
+					"",
+					"// Basic tests",
+					"pm.test('Response time is less than 10 seconds', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(10000);",
+					"});",
+					"",
+					"pm.test('Response has proper headers', function () {",
+					"    pm.expect(pm.response.headers.has('content-type')).to.be.true;",
+					"});",
+					"",
+					"// Check for common error responses",
+					"if (pm.response.code >= 400) {",
+					"    console.log('❌ Error response:', pm.response.json());",
+					"    ",
+					"    pm.test('Error response has message', function () {",
+					"        const jsonData = pm.response.json();",
+					"        pm.expect(jsonData).to.have.property('message');",
+					"    });",
+					"} else {",
+					"    console.log('✅ Success response');",
+					"",
+					"    pm.test('Response is successful', function () {",
+					"        pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+					"    });",
+					"}",
+					"",
+					"// Pretty print JSON response",
+					"if (pm.response.headers.get('Content-Type').includes('application/json')) {",
+					"    try {",
+					"        const jsonData = pm.response.json();",
+					"        console.log('📄 Response JSON:', JSON.stringify(jsonData, null, 2));",
+					"    } catch (e) {",
+					"        console.log('⚠️  Could not parse JSON response');",
+					"    }",
+					"}",
+					"",
+					"// Store common data for chaining requests",
+					"if (pm.response.code < 400) {",
+					"    const jsonData = pm.response.json();",
+					"    ",
+					"    // Store course ID if present",
+					"    if (jsonData && jsonData.courseId) {",
+					"        pm.environment.set('last_course_id', jsonData.courseId);",
+					"    }",
+					"    ",
+					"    // Store session name if present",
+					"    if (jsonData && jsonData.feedbackSessionName) {",
+					"        pm.environment.set('last_session_name', jsonData.feedbackSessionName);",
+					"    }",
+					"    ",
+					"    // Store question ID if present",
+					"    if (jsonData && jsonData.feedbackQuestionId) {",
+					"        pm.environment.set('last_question_id', jsonData.feedbackQuestionId);",
+					"    }",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "{{base_url}}",
+			"type": "string"
+		}
+	]
+}

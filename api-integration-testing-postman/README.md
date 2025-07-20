@@ -16,3 +16,9 @@ Este módulo contiene pruebas de integración de la API REST de la plataforma **
 - Newman (CLI para ejecución automatizada)
    ```bash
    npm install -g newman
+
+## Ejecución
+
+Para su ejecución consideramos que se cumple los requisitos anteriores por lo que usaremos una terminal para ejecutar las pruebas presentes
+   ```bash
+   newman run TEAMMATES_Complete_Collection.postman_collection.json -e TEAMMATES_Environment.postman_environment.json
