@@ -2,13 +2,13 @@
 	"info": {
 		"_postman_id": "2499b1be-276a-46ff-bd26-d1915a501ebc",
 		"name": "TEAMMATES Complete API Collection",
-		"description": "Complete collection with all 30 requests and 92+ assertions corrected",
+		"description": "Colección completa con todas las 30 solicitudes y más de 92 aserciones corregidas",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "46689549"
 	},
 	"item": [
 		{
-			"name": "Admin Management",
+			"name": "Gestión de Administrador",
 			"item": [
 				{
 					"name": "Get Account",
@@ -17,7 +17,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"console.log('Starting request to:', '{{base_url}}/webapi/account?instructorid={{admin_user}}');"
+									"console.log('Iniciando solicitud a:', '{{base_url}}/webapi/account?instructorid={{admin_user}}');"
 								],
 								"type": "text/javascript"
 							}
@@ -26,33 +26,33 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"console.log('⏱️  Response time:', pm.response.responseTime + 'ms');",
-									"console.log('Status:', pm.response.status, pm.response.code);",
-									"console.log('Response size:', pm.response.responseSize, 'bytes');",
+									"console.log('⏱️  Tiempo de respuesta:', pm.response.responseTime + 'ms');",
+									"console.log('Estado:', pm.response.status, pm.response.code);",
+									"console.log('Tamaño de respuesta:', pm.response.responseSize, 'bytes');",
 									"",
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
 									"if (pm.response.code === 200) {",
-									"  console.log('Success response');",
-									"  pm.test('Response is successful', function () {",
+									"  console.log('Respuesta exitosa');",
+									"  pm.test('La respuesta es exitosa', function () {",
 									"    pm.response.to.have.status(200);",
 									"  });",
 									"  ",
 									"  const response = pm.response.json();",
-									"  console.log('Response JSON:', JSON.stringify(response, null, 2));",
+									"  console.log('JSON de respuesta:', JSON.stringify(response, null, 2));",
 									"  ",
-									"  pm.test('Account data is present', function () {",
-									"    pm.expect(response).to.have.any.keys(['googleId', 'name', 'email', 'message']);",
+									"  pm.test('Los datos de la cuenta están presentes', function () {",
+									"    pm.expect(response).to.have.any.keys(['googleId', 'hez', 'email', 'message']);",
 									"  });",
 									"} else {",
-									"  console.log('Error response:', pm.response.json());",
-									"  pm.test('Error response has message', function () {",
+									"  console.log('Respuesta de error:', pm.response.json());",
+									"  pm.test('La respuesta de error tiene un mensaje', function () {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.property('message');",
 									"  });",
@@ -104,19 +104,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response is successful', function () {",
+									"pm.test('La respuesta es exitosa', function () {",
 									"  pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test('Accounts array is present', function () {",
+									"pm.test('El array de cuentas está presente', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.property('accounts');",
 									"  pm.expect(response.accounts).to.be.an('array');",
@@ -168,19 +168,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 15 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 15 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(15000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response is successful', function () {",
+									"pm.test('La respuesta es exitosa', function () {",
 									"  pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test('Ongoing sessions data is present', function () {",
+									"pm.test('Los datos de sesiones en curso están presentes', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.any.keys(['totalOngoingSessions', 'sessions', 'message']);",
 									"});"
@@ -236,19 +236,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response is successful', function () {",
+									"pm.test('La respuesta es exitosa', function () {",
 									"  pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test('Action classes data is present', function () {",
+									"pm.test('Los datos de clases de acción están presentes', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.property('actionClasses');",
 									"  pm.expect(response.actionClasses).to.be.an('array');",
@@ -296,15 +296,15 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.any.keys(['message', 'result', 'error']);",
 									"});"
@@ -355,7 +355,7 @@
 			]
 		},
 		{
-			"name": "Course Management",
+			"name": "Gestión de Cursos",
 			"item": [
 				{
 					"name": "Get All Courses",
@@ -364,20 +364,20 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  if (pm.response.code === 200) {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.any.keys(['courses', 'instructorCourses', 'message']);",
 									"  } else {",
-									"    // Accept business validation errors",
+									"    // Aceptar errores de validación de negocio",
 									"    pm.expect([400, 500]).to.include(pm.response.code);",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.property('message');",
@@ -411,7 +411,7 @@
 								"courses"
 							],
 							"query": [
-								{
+							{
 									"key": "entitytype",
 									"value": "instructor"
 								},
@@ -435,19 +435,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response is successful', function () {",
+									"pm.test('La respuesta es exitosa', function () {",
 									"  pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test('Course details are present', function () {",
+									"pm.test('Los detalles del curso están presentes', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.any.keys(['courseId', 'courseName', 'institute', 'message']);",
 									"});"
@@ -498,7 +498,7 @@
 			]
 		},
 		{
-			"name": "Student Management",
+			"name": "Gestión de Estudiantes",
 			"item": [
 				{
 					"name": "Get Students",
@@ -507,19 +507,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response is successful', function () {",
+									"pm.test('La respuesta es exitosa', function () {",
 									"  pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test('Students data is present', function () {",
+									"pm.test('Los datos de los estudiantes están presentes', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.any.keys(['students', 'message', 'requestId']);",
 									"});"
@@ -570,24 +570,23 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  const contentType = pm.response.headers.get('Content-Type');",
 									"  ",
 									"  if (contentType && contentType.includes('application/json')) {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.any.keys(['searchResults', 'students', 'message']);",
 									"  } else {",
-									"    // Handle HTML responses",
+									"    // Manejar respuestas HTML",
 									"    pm.expect([200, 400, 500]).to.include(pm.response.code);",
 									"  }",
 									"});"
 								],
-								"type": "text/javascript",
-								"packages": {}
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -634,7 +633,7 @@
 			]
 		},
 		{
-			"name": "Instructor Management",
+			"name": "Gestión de Instructores",
 			"item": [
 				{
 					"name": "Get Instructors (Relaxed Timeout)",
@@ -643,19 +642,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 20 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 20 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(20000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response is successful', function () {",
+									"pm.test('La respuesta es exitosa', function () {",
 									"  pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test('Instructors data is present', function () {",
+									"pm.test('Los datos de los instructores están presentes', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.any.keys(['instructors', 'message', 'requestId']);",
 									"});"
@@ -706,7 +705,7 @@
 			]
 		},
 		{
-			"name": "Feedback Sessions",
+			"name": "Gestión de Sesiones de Retroalimentación",
 			"item": [
 				{
 					"name": "Get All Sessions",
@@ -715,15 +714,15 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  if (pm.response.code === 200) {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.any.keys(['feedbackSessions', 'sessions', 'message']);",
@@ -782,11 +781,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  if (pm.response.code === 200) {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.any.keys(['feedbackSessionName', 'courseId', 'message']);",
@@ -887,19 +886,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Session creation response', function () {",
+									"pm.test('Respuesta de creación de sesión', function () {",
 									"  pm.expect([200, 201, 400, 409]).to.include(pm.response.code);",
 									"});",
 									"",
-									"pm.test('Timestamp in response message', function () {",
+									"pm.test('Marca de tiempo en el mensaje de respuesta', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.property('feedbackSessionName');",
 									"});"
@@ -989,19 +988,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Session creation response', function () {",
+									"pm.test('Respuesta de creación de sesión', function () {",
 									"  pm.expect([200, 201, 400, 409]).to.include(pm.response.code);",
 									"});",
 									"",
-									"pm.test('Error response has message', function () {",
+									"pm.test('La respuesta de error tiene un mensaje', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.property('message');",
 									"});"
@@ -1062,11 +1061,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  if (pm.response.code === 200) {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.any.keys(['expectedTotal', 'submittedTotal', 'message']);",
@@ -1122,7 +1121,7 @@
 			]
 		},
 		{
-			"name": "Questions & Responses",
+			"name": "Gestión de Preguntas y Respuestas",
 			"item": [
 				{
 					"name": "Get Questions",
@@ -1131,11 +1130,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  if (pm.response.code === 200) {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.any.keys(['questions', 'message']);",
@@ -1204,15 +1203,15 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Question creation response', function () {",
+									"pm.test('Respuesta de creación de pregunta', function () {",
 									"  pm.expect([200, 201, 400, 409, 500]).to.include(pm.response.code);",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  if (pm.response.code === 200) {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.any.keys(['feedbackQuestionId', 'questionNumber', 'message']);",
@@ -1326,11 +1325,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  if (pm.response.code === 200) {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.any.keys(['responses', 'message']);",
@@ -1399,7 +1398,7 @@
 			]
 		},
 		{
-			"name": "Notifications",
+			"name": "Gestión de Notificaciones",
 			"item": [
 				{
 					"name": "Get Notifications",
@@ -1408,19 +1407,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response is successful', function () {",
+									"pm.test('La respuesta es exitosa', function () {",
 									"  pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test('Notifications data is present', function () {",
+									"pm.test('Los datos de las notificaciones están presentes', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.property('notifications');",
 									"  pm.expect(response.notifications).to.be.an('array');",
@@ -1492,19 +1491,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Notification creation response', function () {",
+									"pm.test('Respuesta de creación de notificación', function () {",
 									"  pm.expect([200, 201, 400]).to.include(pm.response.code);",
 									"});",
 									"",
-									"pm.test('Error response has message', function () {",
+									"pm.test('La respuesta de error tiene un mensaje', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.property('message');",
 									"});"
@@ -1551,7 +1550,7 @@
 			]
 		},
 		{
-			"name": "Logs & Monitoring",
+			"name": "Registros y Monitoreo",
 			"item": [
 				{
 					"name": "Get Session Logs",
@@ -1560,15 +1559,15 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 15 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 15 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(15000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  if (pm.response.code === 200) {",
 									"    const response = pm.response.json();",
 									"    pm.expect(response).to.have.any.keys(['feedbackSessionLogEntries', 'logs', 'message', 'feedbackSessionLogs']);",
@@ -1641,11 +1640,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 30 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 30 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(30000);",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  const contentType = pm.response.headers.get('Content-Type');",
 									"  ",
 									"  if (contentType && contentType.includes('application/json')) {",
@@ -1714,7 +1713,7 @@
 			]
 		},
 		{
-			"name": "Search & Utility",
+			"name": "Búsqueda y Utilidades",
 			"item": [
 				{
 					"name": "Get Timezone (Relaxed Timeout)",
@@ -1723,16 +1722,16 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is reasonable (relaxed)', function () {",
+									"pm.test('El tiempo de respuesta es razonable (relajado)', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(30000);",
 									"});",
 									"",
-									"pm.test('Response validation', function () {",
+									"pm.test('Validación de la respuesta', function () {",
 									"  // Accept both JSON and HTML responses",
 									"  pm.expect([200, 500]).to.include(pm.response.code);",
 									"});",
 									"",
-									"pm.test('Response structure validation', function () {",
+									"pm.test('Validación de la estructura de la respuesta', function () {",
 									"  const contentType = pm.response.headers.get('Content-Type');",
 									"  ",
 									"  if (pm.response.code === 200 && contentType && contentType.includes('application/json')) {",
@@ -1786,19 +1785,19 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Response time is less than 10 seconds', function () {",
+									"pm.test('El tiempo de respuesta es menor a 10 segundos', function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(10000);",
 									"});",
 									"",
-									"pm.test('Response has proper headers', function () {",
+									"pm.test('La respuesta tiene los encabezados correctos', function () {",
 									"  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
 									"});",
 									"",
-									"pm.test('Response is successful', function () {",
+									"pm.test('La respuesta es exitosa', function () {",
 									"  pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test('Exception test response', function () {",
+									"pm.test('Respuesta de prueba de excepción', function () {",
 									"  const response = pm.response.json();",
 									"  pm.expect(response).to.have.property('message');",
 									"});"
@@ -1849,11 +1848,11 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test('Service is accessible', function () {",
+									"pm.test('El servicio es accesible', function () {",
 									"  pm.expect([200, 302]).to.include(pm.response.code);",
 									"});",
 									"",
-									"pm.test('Response validation', function () {",
+									"pm.test('Validación de la respuesta', function () {",
 									"  const contentType = pm.response.headers.get('Content-Type');",
 									"  ",
 									"  if (contentType && contentType.includes('application/json')) {",
