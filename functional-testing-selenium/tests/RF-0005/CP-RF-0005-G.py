@@ -26,15 +26,16 @@ from selenium.webdriver.common.action_chains import ActionChains
 # Constantes
 SCROLL_SCRIPT = "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});"
 TEST_URL = "https://modern-vortex-463217-h9.uc.r.appspot.com/web/instructor/courses"
+# Nombre de 101 caracteres (supera el límite)
+LONG_NAME_101_CHARS = "c" * 101
 STUDENT_DATA = {
-    "name": "Juan Pérez",
-    "section": "Grupo B", 
-    "team": "Equipo 4",
-    "email": "juan.perez123@unsa.edu.pe",
-    "comments": "Nuevo estudiante"
+    "name": LONG_NAME_101_CHARS,  # Nombre que supera límite - caso de prueba
+    "section": "Grupo A", 
+    "team": "Equipo 5",
+    "email": "test.limite101@unsa.edu.pe",
+    "comments": "Prueba de nombre que supera límite máximo (101 caracteres)"
 }
 
-# Funciones principales simplificadas
 def wait_for_table_ready(driver):
     """Esperar a que la tabla de enrollment esté lista"""
     try:
@@ -42,7 +43,7 @@ def wait_for_table_ready(driver):
         table = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "table.table")))
         if table.is_displayed():
             time.sleep(3)
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight * 0.3);")
+            driver.execute_script("window.scrollTo(0, 0);")
             return True
     except Exception:
         time.sleep(5)
@@ -63,7 +64,6 @@ def fill_handsontable_data(driver, student_data):
         if not gridcells:
             return False
         
-        # Mapeo de campos a columnas: Section - Team - Name - Email - Comments
         field_to_column = {
             "section": 1, "team": 2, "name": 3, "email": 4, "comments": 5
         }
@@ -119,39 +119,31 @@ def fill_student_data_teammates_mejorado(driver, student_data):
     
     return fill_handsontable_data(driver, student_data)
 
-def verify_student_enrollment_result_mejorado(driver):
-    """Verificar resultados del enrollment"""
+def verify_name_length_error(driver):
+    """Verificar errores específicos de longitud de nombre"""
     result = {"success": False, "messages": [], "errors": []}
     
-    # Buscar indicadores de éxito
-    success_indicators = ["successfully enrolled", "student added", "enrollment complete"]
-    success_selectors = [".success", ".alert-success", "*[class*='success']"]
+    # Patrones de error específicos basados en la respuesta real de TEAMMATES
+    name_length_error_patterns = [
+        "is not acceptable to TEAMMATES as a/an person name because it is too long",
+        "The value of a/an person name should be no longer than 100 characters",
+        "Student Name must be at most 100 characters",
+        "Name must be at most 100 characters", 
+        "Student name too long",
+        "Name exceeds maximum length",
+        "Name must be 100 characters or less",
+        "Maximum name length exceeded",
+        "should be no longer than 100 characters"
+    ]
     
-    for selector in success_selectors:
-        try:
-            elements = driver.find_elements(By.CSS_SELECTOR, selector)
-            for element in elements:
-                if element.is_displayed():
-                    text = element.text.strip()
-                    if text:
-                        result["messages"].append(text)
-                        result["success"] = True
-        except Exception:
-            continue
+    # Selectores para buscar errores, incluyendo los específicos mostrados
+    error_selectors = [
+        ".bg-danger", ".card-body.bg-danger", ".alert-danger", ".error", 
+        "*[class*='error']", ".invalid-feedback", ".text-danger", 
+        "*[class*='invalid']", "td", ".enroll-results-panel"
+    ]
     
-    # Buscar por texto específico
-    for indicator in success_indicators:
-        try:
-            xpath = f"//*[contains(text(), '{indicator}')]"
-            elements = driver.find_elements(By.XPATH, xpath)
-            for element in elements:
-                if element.is_displayed():
-                    result["success"] = True
-        except Exception:
-            continue
-    
-    # Buscar errores
-    error_selectors = [".error", ".alert-danger", "*[class*='error']"]
+    # Buscar en elementos con selectors CSS
     for selector in error_selectors:
         try:
             elements = driver.find_elements(By.CSS_SELECTOR, selector)
@@ -160,6 +152,24 @@ def verify_student_enrollment_result_mejorado(driver):
                     text = element.text.strip()
                     if text:
                         result["errors"].append(text)
+                        # Verificar si contiene algún patrón de error de longitud
+                        for pattern in name_length_error_patterns:
+                            if pattern.lower() in text.lower():
+                                result["success"] = True
+        except Exception:
+            continue
+    
+    # Buscar por texto específico usando XPath
+    for pattern in name_length_error_patterns:
+        try:
+            xpath = f"//*[contains(text(), '{pattern}')]"
+            elements = driver.find_elements(By.XPATH, xpath)
+            for element in elements:
+                if element.is_displayed():
+                    result["success"] = True
+                    element_text = element.text.strip()
+                    if element_text and element_text not in result["errors"]:
+                        result["errors"].append(element_text)
         except Exception:
             continue
     
@@ -171,11 +181,10 @@ def navigate_to_courses(driver):
     time.sleep(3)
     return True
 
-def click_enroll_button(driver, wait):
+def click_enroll_button(driver):
     """Buscar y hacer clic en el botón/enlace 'Enroll'"""
     time.sleep(5)
     
-    # Buscar por enlaces con texto 'Enroll'
     links = driver.find_elements(By.TAG_NAME, "a")
     for link in links:
         try:
@@ -195,73 +204,128 @@ def center_enrollment_table(driver):
     if not wait_for_table_ready(driver):
         return False
     
-    driver.execute_script("window.scrollTo(0, 200);")
+    driver.execute_script("window.scrollTo(0, 0);")
     time.sleep(2)
     return True
 
 def fill_student_data(driver):
-    """Ingresar datos del estudiante"""
-    take_screenshot(driver, "CP-RF-0005-A", "antes-llenar-datos")
+    """Ingresar datos del estudiante (con nombre de 101 caracteres)"""
+    take_screenshot(driver, "CP-RF-0005-G", "antes-llenar-datos")
     
     data_entered = fill_student_data_teammates_mejorado(driver, STUDENT_DATA)
     
-    take_screenshot(driver, "CP-RF-0005-A", "despues-llenar-datos")
+    take_screenshot(driver, "CP-RF-0005-G", "despues-llenar-datos-nombre-101-chars")
     
     return data_entered
 
 def submit_enrollment(driver, wait):
-    """Hacer clic en el botón 'Enroll students'"""
+    """Hacer clic en el botón 'Enroll students' y esperar a que se procese"""
     try:
         button = wait.until(EC.element_to_be_clickable((By.ID, "btn-enroll")))
         driver.execute_script(SCROLL_SCRIPT, button)
         time.sleep(2)
         button.click()
-        time.sleep(3)
+        
+        # Esperar a que aparezcan los resultados del enrollment
+        result_found = False
+        max_wait = 20  # 20 segundos máximo
+        wait_interval = 1
+        
+        for attempt in range(max_wait):
+            time.sleep(wait_interval)
+            
+            # Buscar indicadores de éxito
+            success_selectors = [
+                ".alert-success", ".success", ".bg-success",
+                "*[class*='success']", ".enroll-results-panel"
+            ]
+            
+            # Buscar indicadores de error o validación
+            error_selectors = [
+                ".alert-danger", ".error", ".bg-danger", 
+                "*[class*='error']", "*[class*='danger']", ".card-body.bg-danger"
+            ]
+            
+            # Verificar éxito
+            for selector in success_selectors:
+                try:
+                    elements = driver.find_elements(By.CSS_SELECTOR, selector)
+                    for element in elements:
+                        if element.is_displayed() and element.text.strip():
+                            print(f"Resultado encontrado (éxito): {element.text.strip()[:100]}")
+                            result_found = True
+                            break
+                except Exception:
+                    continue
+                if result_found:
+                    break
+            
+            # Verificar errores
+            if not result_found:
+                for selector in error_selectors:
+                    try:
+                        elements = driver.find_elements(By.CSS_SELECTOR, selector)
+                        for element in elements:
+                            if element.is_displayed() and element.text.strip():
+                                print(f"Resultado encontrado (error): {element.text.strip()[:100]}")
+                                result_found = True
+                                break
+                    except Exception:
+                        continue
+                    if result_found:
+                        break
+            
+            if result_found:
+                break
+                
+            # Imprimir progreso cada 5 segundos
+            if attempt % 5 == 4:
+                print(f"Esperando resultados del enrollment... ({attempt + 1}/{max_wait}s)")
+        
+        if not result_found:
+            print("Advertencia: No se detectaron resultados del enrollment después de 20s")
+        
         return True
-    except Exception:
+    except Exception as e:
+        print(f"Error en submit_enrollment: {e}")
         return False
 
 def verify_and_report_results(driver):
-    """Verificar y reportar resultados del enrollment"""
-    result = verify_student_enrollment_result_mejorado(driver)
-    
-    # Mostrar resultados
-    if result["messages"]:
-        print("Mensajes de éxito:")
-        for msg in result["messages"]:
-            print(f"  • {msg}")
+    """Verificar y reportar errores del enrollment para nombre de 101 caracteres"""
+    result = verify_name_length_error(driver)
     
     if result["errors"]:
-        print("Errores encontrados:")
+        print("Errores encontrados (esperados):")
         for error in result["errors"]:
             print(f"  • {error}")
     
-    # Resultado final
     if result["success"]:
-        print("\nTEST CP-RF-0005-A: EXITOSO")
+        print("\nTEST CP-RF-0005-G: EXITOSO - Error de longitud de nombre detectado correctamente")
         return True
     else:
-        print("\nTEST CP-RF-0005-A: FALLIDO")
+        print("\nTEST CP-RF-0005-G: FALLIDO - No se detectó el error de longitud esperado")
         return False
 
-def test_ingreso_exitoso_estudiante():
+def test_nombre_supera_longitud_maxima():
+    print("Datos de prueba:")
     for key, value in STUDENT_DATA.items():
-        print(f"  {key.title()}: {value}")
+        if key == "name":
+            print(f"  {key.title()}: {value[:50]}... [101 caracteres] - Caso de prueba")
+        else:
+            print(f"  {key.title()}: {value}")
+    print(f"\nLongitud del nombre: {len(STUDENT_DATA['name'])} caracteres (supera límite de 100)")
     print("")
     
     driver = None
     
     try:
-        # Crear WebDriver usando la estructura global
         driver = get_driver_for_rf("0005")
         wait = WebDriverWait(driver, 10)
-        time.sleep(2)
         
-        # Ejecutar pasos del test
         if not navigate_to_courses(driver):
             return False
             
-        if not click_enroll_button(driver, wait):
+        if not click_enroll_button(driver):
             return False
             
         if not center_enrollment_table(driver):
@@ -270,33 +334,28 @@ def test_ingreso_exitoso_estudiante():
         if not fill_student_data(driver):
             return False
         
-        # Primera captura de pantalla
-        take_screenshot(driver, "CP-RF-0005-A", "datos-ingresados")
+        take_screenshot(driver, "CP-RF-0005-G", "datos-ingresados-nombre-101-chars")
         
         if not submit_enrollment(driver, wait):
             return False
         
-        time.sleep(3)
-        # Segunda captura de pantalla
-        take_screenshot(driver, "CP-RF-0005-A", "resultado-enroll")
+        take_screenshot(driver, "CP-RF-0005-G", "resultado-error-nombre-101-chars")
         
         return verify_and_report_results(driver)
             
     except Exception as e:
-        print("\nTEST CP-RF-0005-A: ERROR CRÍTICO")
+        print("\nTEST CP-RF-0005-G: ERROR CRÍTICO")
         print(f"Error: {e}")
         
-        # Captura de pantalla del error
         try:
             if driver:
-                take_screenshot(driver, "CP-RF-0005-A", "error-critico")
+                take_screenshot(driver, "CP-RF-0005-G", "error-critico")
         except Exception:
             pass
             
         return False
         
     finally:
-        # Limpiar recursos
         if driver:
             try:
                 print("🧹 Cerrando navegador...")
@@ -307,17 +366,17 @@ def test_ingreso_exitoso_estudiante():
 def main():
     """Función principal para ejecutar el test"""
     print("SUITE DE PRUEBAS RF-0005")
-    print("Caso: CP-RF-0005-A - Ingreso exitoso de datos de estudiante")
-    print("=" * 60)
+    print("Caso: CP-RF-0005-G - Nombre supera longitud máxima (101 caracteres)")
+    print("=" * 70)
     
-    result = test_ingreso_exitoso_estudiante()
+    result = test_nombre_supera_longitud_maxima()
     
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 70)
     if result:
         print("RESULTADO FINAL: EXITOSO")
     else:
         print("RESULTADO FINAL: FALLIDO")
-    print("=" * 60)
+    print("=" * 70)
     
     return result
 

@@ -46,7 +46,6 @@ def take_screenshot(driver, test_name, step="", img_dir="img"):
         
         # Tomar screenshot
         driver.save_screenshot(filepath)
-        print(f"Screenshot guardado: {filepath}")
         return filepath
         
     except Exception as e:
@@ -71,7 +70,6 @@ def find_and_click_button(driver, button_selectors, timeout=10):
         try:
             button = wait.until(EC.element_to_be_clickable((selector_type, selector_value)))
             button.click()
-            print(f"✓ Botón encontrado y clickeado: {selector_type} = '{selector_value}'")
             return True
         except:
             continue
@@ -148,7 +146,6 @@ def clear_and_send_keys(driver, field_id, text):
         field = driver.find_element(By.ID, field_id)
         field.clear()
         field.send_keys(text)
-        print(f"✓ Campo '{field_id}' llenado con: '{text}'")
         return True
     except Exception as e:
         print(f"✗ Error llenando campo '{field_id}': {e}")

@@ -29,7 +29,6 @@ def close_all_chrome():
                       capture_output=True, text=True, check=False)
         time.sleep(1)
         
-        print("Procesos de Chrome cerrados.")
     except Exception as e:
         print(f"Error cerrando Chrome: {e}")
 

@@ -27,11 +27,11 @@ from selenium.webdriver.common.action_chains import ActionChains
 SCROLL_SCRIPT = "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});"
 TEST_URL = "https://modern-vortex-463217-h9.uc.r.appspot.com/web/instructor/courses"
 STUDENT_DATA = {
-    "name": "Juan Pérez",
-    "section": "Grupo B", 
-    "team": "Equipo 4",
-    "email": "juan.perez123@unsa.edu.pe",
-    "comments": "Nuevo estudiante"
+    "name": "",  # Nombre vacío - caso de prueba
+    "section": "Grupo A", 
+    "team": "Equipo 5",
+    "email": "juan.perez@unsa.edu.pe",
+    "comments": "Sin nombre"
 }
 
 # Funciones principales simplificadas
@@ -73,8 +73,10 @@ def fill_handsontable_data(driver, student_data):
         
         for field_name, column_index in field_to_column.items():
             value = student_data.get(field_name, "")
-            if not value and field_name != "comments":
-                continue
+            
+            # Para este caso específico, el nombre debe quedar vacío
+            if field_name == "name":
+                value = ""
             
             xpath_options = [
                 f".//tbody/tr[1]/td[{column_index}][@role='gridcell']",
@@ -96,19 +98,22 @@ def fill_handsontable_data(driver, student_data):
                         try:
                             edit_input = driver.find_element(By.CSS_SELECTOR, "input.handsontableInput")
                             edit_input.clear()
-                            edit_input.send_keys(value)
+                            if value:  # Solo enviar si hay valor
+                                edit_input.send_keys(value)
                             edit_input.send_keys(Keys.ENTER)
                         except Exception:
-                            actions.send_keys(value).perform()
+                            if value:
+                                actions.send_keys(value).perform()
                             actions.send_keys(Keys.ENTER).perform()
                         
-                        fields_filled += 1
+                        if field_name != "name":  # Solo contar campos que no sean el nombre
+                            fields_filled += 1
                         time.sleep(0.5)
                         break
                 except Exception:
                     continue
         
-        return fields_filled >= 4
+        return fields_filled >= 3  # Esperamos al menos 3 campos (sin contar el nombre vacío)
     except Exception:
         return False
 
@@ -119,39 +124,28 @@ def fill_student_data_teammates_mejorado(driver, student_data):
     
     return fill_handsontable_data(driver, student_data)
 
-def verify_student_enrollment_result_mejorado(driver):
-    """Verificar resultados del enrollment"""
+def verify_student_enrollment_error(driver):
+    """Verificar errores específicos del enrollment para nombre vacío"""
     result = {"success": False, "messages": [], "errors": []}
     
-    # Buscar indicadores de éxito
-    success_indicators = ["successfully enrolled", "student added", "enrollment complete"]
-    success_selectors = [".success", ".alert-success", "*[class*='success']"]
+    # Buscar errores específicos para campos obligatorios vacíos (como se muestra en tu salida)
+    name_error_patterns = [
+        "Found empty compulsory fields",
+        "empty compulsory fields",
+        "Student Name is required",
+        "Name is required", 
+        "Student name cannot be empty",
+        "Name field is mandatory",
+        "compulsory fields"
+    ]
     
-    for selector in success_selectors:
-        try:
-            elements = driver.find_elements(By.CSS_SELECTOR, selector)
-            for element in elements:
-                if element.is_displayed():
-                    text = element.text.strip()
-                    if text:
-                        result["messages"].append(text)
-                        result["success"] = True
-        except Exception:
-            continue
+    # Buscar errores en elementos comunes, incluyendo específicamente bg-danger
+    error_selectors = [
+        ".bg-danger", "div.bg-danger", ".card-body.bg-danger",
+        ".error", ".alert-danger", "*[class*='error']", 
+        ".invalid-feedback", ".text-danger", "*[class*='invalid']"
+    ]
     
-    # Buscar por texto específico
-    for indicator in success_indicators:
-        try:
-            xpath = f"//*[contains(text(), '{indicator}')]"
-            elements = driver.find_elements(By.XPATH, xpath)
-            for element in elements:
-                if element.is_displayed():
-                    result["success"] = True
-        except Exception:
-            continue
-    
-    # Buscar errores
-    error_selectors = [".error", ".alert-danger", "*[class*='error']"]
     for selector in error_selectors:
         try:
             elements = driver.find_elements(By.CSS_SELECTOR, selector)
@@ -159,7 +153,26 @@ def verify_student_enrollment_result_mejorado(driver):
                 if element.is_displayed():
                     text = element.text.strip()
                     if text:
-                        result["errors"].append(text)
+                        # Solo agregar a errores si contiene palabras clave de error
+                        contains_error = any(pattern.lower() in text.lower() for pattern in name_error_patterns)
+                        if contains_error:
+                            result["errors"].append(text)
+                            result["success"] = True
+        except Exception:
+            continue
+    
+    # Buscar por texto específico en toda la página
+    for pattern in name_error_patterns:
+        try:
+            xpath = f"//*[contains(text(), '{pattern}')]"
+            elements = driver.find_elements(By.XPATH, xpath)
+            for element in elements:
+                if element.is_displayed():
+                    text = element.text.strip()
+                    if text:
+                        result["success"] = True
+                        if text not in result["errors"]:
+                            result["errors"].append(text)
         except Exception:
             continue
     
@@ -200,12 +213,12 @@ def center_enrollment_table(driver):
     return True
 
 def fill_student_data(driver):
-    """Ingresar datos del estudiante"""
-    take_screenshot(driver, "CP-RF-0005-A", "antes-llenar-datos")
+    """Ingresar datos del estudiante (con nombre vacío)"""
+    take_screenshot(driver, "CP-RF-0005-B", "antes-llenar-datos")
     
     data_entered = fill_student_data_teammates_mejorado(driver, STUDENT_DATA)
     
-    take_screenshot(driver, "CP-RF-0005-A", "despues-llenar-datos")
+    take_screenshot(driver, "CP-RF-0005-B", "despues-llenar-datos-nombre-vacio")
     
     return data_entered
 
@@ -214,39 +227,54 @@ def submit_enrollment(driver, wait):
     try:
         button = wait.until(EC.element_to_be_clickable((By.ID, "btn-enroll")))
         driver.execute_script(SCROLL_SCRIPT, button)
-        time.sleep(2)
         button.click()
-        time.sleep(3)
+        time.sleep(5)
         return True
     except Exception:
         return False
 
 def verify_and_report_results(driver):
-    """Verificar y reportar resultados del enrollment"""
-    result = verify_student_enrollment_result_mejorado(driver)
+    """Verificar y reportar errores del enrollment para nombre vacío"""
+    result = verify_student_enrollment_error(driver)
     
     # Mostrar resultados
-    if result["messages"]:
-        print("Mensajes de éxito:")
-        for msg in result["messages"]:
-            print(f"  • {msg}")
-    
     if result["errors"]:
-        print("Errores encontrados:")
+        print("Errores encontrados (esperados):")
         for error in result["errors"]:
             print(f"  • {error}")
+        print("")
     
-    # Resultado final
+    # Resultado final con más información
     if result["success"]:
-        print("\nTEST CP-RF-0005-A: EXITOSO")
+        print("✅ TEST CP-RF-0005-B: EXITOSO")
+        print("   - Error de validación detectado correctamente")
+        print("   - El sistema rechazó correctamente el formulario con nombre vacío")
         return True
     else:
-        print("\nTEST CP-RF-0005-A: FALLIDO")
+        print("❌ TEST CP-RF-0005-B: FALLIDO")
+        print("   - No se detectó el error de validación esperado")
+        print("   - Mensaje esperado: 'Found empty compulsory fields' o similar")
+        
+        # Información adicional para debug
+        print("\n🔍 Debug - Buscando elementos con clase bg-danger:")
+        try:
+            danger_elements = driver.find_elements(By.CSS_SELECTOR, ".bg-danger")
+            for i, element in enumerate(danger_elements):
+                if element.is_displayed():
+                    text = element.text.strip()
+                    print(f"   Element {i+1}: {text}")
+        except Exception as e:
+            print(f"   Error buscando elementos: {e}")
+            
         return False
 
-def test_ingreso_exitoso_estudiante():
+def test_nombre_estudiante_vacio():
+    print("Datos de prueba:")
     for key, value in STUDENT_DATA.items():
-        print(f"  {key.title()}: {value}")
+        if key == "name":
+            print(f"  {key.title()}: [VACÍO] - Caso de prueba")
+        else:
+            print(f"  {key.title()}: {value}")
     print("")
     
     driver = None
@@ -255,7 +283,6 @@ def test_ingreso_exitoso_estudiante():
         # Crear WebDriver usando la estructura global
         driver = get_driver_for_rf("0005")
         wait = WebDriverWait(driver, 10)
-        time.sleep(2)
         
         # Ejecutar pasos del test
         if not navigate_to_courses(driver):
@@ -271,25 +298,24 @@ def test_ingreso_exitoso_estudiante():
             return False
         
         # Primera captura de pantalla
-        take_screenshot(driver, "CP-RF-0005-A", "datos-ingresados")
+        take_screenshot(driver, "CP-RF-0005-B", "datos-ingresados-nombre-vacio")
         
         if not submit_enrollment(driver, wait):
             return False
         
-        time.sleep(3)
         # Segunda captura de pantalla
-        take_screenshot(driver, "CP-RF-0005-A", "resultado-enroll")
+        take_screenshot(driver, "CP-RF-0005-B", "resultado-error-nombre-vacio")
         
         return verify_and_report_results(driver)
             
     except Exception as e:
-        print("\nTEST CP-RF-0005-A: ERROR CRÍTICO")
+        print("\nTEST CP-RF-0005-B: ERROR CRÍTICO")
         print(f"Error: {e}")
         
         # Captura de pantalla del error
         try:
             if driver:
-                take_screenshot(driver, "CP-RF-0005-A", "error-critico")
+                take_screenshot(driver, "CP-RF-0005-B", "error-critico")
         except Exception:
             pass
             
@@ -307,10 +333,10 @@ def test_ingreso_exitoso_estudiante():
 def main():
     """Función principal para ejecutar el test"""
     print("SUITE DE PRUEBAS RF-0005")
-    print("Caso: CP-RF-0005-A - Ingreso exitoso de datos de estudiante")
+    print("Caso: CP-RF-0005-B - Nombre de estudiante vacío")
     print("=" * 60)
     
-    result = test_ingreso_exitoso_estudiante()
+    result = test_nombre_estudiante_vacio()
     
     print("\n" + "=" * 60)
     if result:

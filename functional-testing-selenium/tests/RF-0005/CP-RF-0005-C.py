@@ -27,11 +27,11 @@ from selenium.webdriver.common.action_chains import ActionChains
 SCROLL_SCRIPT = "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});"
 TEST_URL = "https://modern-vortex-463217-h9.uc.r.appspot.com/web/instructor/courses"
 STUDENT_DATA = {
-    "name": "Juan Pérez",
-    "section": "Grupo B", 
-    "team": "Equipo 4",
-    "email": "juan.perez123@unsa.edu.pe",
-    "comments": "Nuevo estudiante"
+    "name": "María José",
+    "section": "Grupo A", 
+    "team": "Equipo 5",
+    "email": "juan.perez@unsa",  # Email inválido - caso de prueba
+    "comments": "Email con formato incorrecto"
 }
 
 # Funciones principales simplificadas
@@ -119,39 +119,32 @@ def fill_student_data_teammates_mejorado(driver, student_data):
     
     return fill_handsontable_data(driver, student_data)
 
-def verify_student_enrollment_result_mejorado(driver):
-    """Verificar resultados del enrollment"""
+def verify_email_format_error(driver):
+    """Verificar errores específicos de formato de email"""
     result = {"success": False, "messages": [], "errors": []}
     
-    # Buscar indicadores de éxito
-    success_indicators = ["successfully enrolled", "student added", "enrollment complete"]
-    success_selectors = [".success", ".alert-success", "*[class*='success']"]
+    # Buscar errores específicos para formato de email (basado en los mensajes reales del sistema)
+    email_error_patterns = [
+        "is not acceptable to TEAMMATES as a/an email",
+        "not in the correct format",
+        "not acceptable to TEAMMATES",
+        "email because it is not in the correct format",
+        "should end with a top level domain",
+        "failed to be enrolled",
+        "Invalid email format",
+        "Invalid email address",
+        "Email format is invalid",
+        "Please enter a valid email"
+    ]
     
-    for selector in success_selectors:
-        try:
-            elements = driver.find_elements(By.CSS_SELECTOR, selector)
-            for element in elements:
-                if element.is_displayed():
-                    text = element.text.strip()
-                    if text:
-                        result["messages"].append(text)
-                        result["success"] = True
-        except Exception:
-            continue
+    # Buscar errores en elementos comunes, incluyendo específicamente bg-danger y tablas de error
+    error_selectors = [
+        ".bg-danger", "div.bg-danger", ".card-body.bg-danger",
+        ".card-header.bg-danger", "td", ".enroll-results-panel",
+        ".error", ".alert-danger", "*[class*='error']", 
+        ".invalid-feedback", ".text-danger", "*[class*='invalid']"
+    ]
     
-    # Buscar por texto específico
-    for indicator in success_indicators:
-        try:
-            xpath = f"//*[contains(text(), '{indicator}')]"
-            elements = driver.find_elements(By.XPATH, xpath)
-            for element in elements:
-                if element.is_displayed():
-                    result["success"] = True
-        except Exception:
-            continue
-    
-    # Buscar errores
-    error_selectors = [".error", ".alert-danger", "*[class*='error']"]
     for selector in error_selectors:
         try:
             elements = driver.find_elements(By.CSS_SELECTOR, selector)
@@ -159,7 +152,26 @@ def verify_student_enrollment_result_mejorado(driver):
                 if element.is_displayed():
                     text = element.text.strip()
                     if text:
-                        result["errors"].append(text)
+                        # Solo agregar a errores si contiene palabras clave de error de email
+                        contains_email_error = any(pattern.lower() in text.lower() for pattern in email_error_patterns)
+                        if contains_email_error:
+                            result["errors"].append(text)
+                            result["success"] = True
+        except Exception:
+            continue
+    
+    # Buscar por texto específico en toda la página
+    for pattern in email_error_patterns:
+        try:
+            xpath = f"//*[contains(text(), '{pattern}')]"
+            elements = driver.find_elements(By.XPATH, xpath)
+            for element in elements:
+                if element.is_displayed():
+                    text = element.text.strip()
+                    if text:
+                        result["success"] = True
+                        if text not in result["errors"]:
+                            result["errors"].append(text)
         except Exception:
             continue
     
@@ -171,7 +183,7 @@ def navigate_to_courses(driver):
     time.sleep(3)
     return True
 
-def click_enroll_button(driver, wait):
+def click_enroll_button(driver):
     """Buscar y hacer clic en el botón/enlace 'Enroll'"""
     time.sleep(5)
     
@@ -200,12 +212,12 @@ def center_enrollment_table(driver):
     return True
 
 def fill_student_data(driver):
-    """Ingresar datos del estudiante"""
-    take_screenshot(driver, "CP-RF-0005-A", "antes-llenar-datos")
+    """Ingresar datos del estudiante (con email inválido)"""
+    take_screenshot(driver, "CP-RF-0005-C", "antes-llenar-datos")
     
     data_entered = fill_student_data_teammates_mejorado(driver, STUDENT_DATA)
     
-    take_screenshot(driver, "CP-RF-0005-A", "despues-llenar-datos")
+    take_screenshot(driver, "CP-RF-0005-C", "despues-llenar-datos-email-invalido")
     
     return data_entered
 
@@ -216,37 +228,63 @@ def submit_enrollment(driver, wait):
         driver.execute_script(SCROLL_SCRIPT, button)
         time.sleep(2)
         button.click()
-        time.sleep(3)
+        time.sleep(5)
         return True
     except Exception:
         return False
 
 def verify_and_report_results(driver):
-    """Verificar y reportar resultados del enrollment"""
-    result = verify_student_enrollment_result_mejorado(driver)
+    """Verificar y reportar errores del enrollment para email inválido"""
+    result = verify_email_format_error(driver)
     
     # Mostrar resultados
-    if result["messages"]:
-        print("Mensajes de éxito:")
-        for msg in result["messages"]:
-            print(f"  • {msg}")
-    
     if result["errors"]:
-        print("Errores encontrados:")
+        print("Errores encontrados (esperados):")
         for error in result["errors"]:
             print(f"  • {error}")
+        print("")
     
-    # Resultado final
+    # Resultado final con más información
     if result["success"]:
-        print("\nTEST CP-RF-0005-A: EXITOSO")
+        print("✅ TEST CP-RF-0005-C: EXITOSO")
+        print("   - Error de validación de email detectado correctamente")
+        print("   - El sistema rechazó correctamente el email con formato inválido")
         return True
     else:
-        print("\nTEST CP-RF-0005-A: FALLIDO")
+        print("❌ TEST CP-RF-0005-C: FALLIDO")
+        print("   - No se detectó el error de validación de email esperado")
+        print("   - Mensaje esperado: 'is not acceptable to TEAMMATES as a/an email'")
+        
+        # Información adicional para debug
+        print("\n🔍 Debug - Buscando elementos con mensajes de error de email:")
+        try:
+            # Buscar específicamente en tablas de resultados
+            table_cells = driver.find_elements(By.CSS_SELECTOR, "td")
+            for i, cell in enumerate(table_cells):
+                if cell.is_displayed():
+                    text = cell.text.strip()
+                    if "not acceptable" in text.lower() or "email" in text.lower():
+                        print(f"   Celda {i+1}: {text}")
+            
+            # Buscar en elementos bg-danger
+            danger_elements = driver.find_elements(By.CSS_SELECTOR, ".bg-danger")
+            for i, element in enumerate(danger_elements):
+                if element.is_displayed():
+                    text = element.text.strip()
+                    print(f"   Elemento bg-danger {i+1}: {text}")
+                    
+        except Exception as e:
+            print(f"   Error buscando elementos: {e}")
+            
         return False
 
-def test_ingreso_exitoso_estudiante():
+def test_formato_correo_invalido():
+    print("Datos de prueba:")
     for key, value in STUDENT_DATA.items():
-        print(f"  {key.title()}: {value}")
+        if key == "email":
+            print(f"  {key.title()}: {value} - [EMAIL INVÁLIDO] - Caso de prueba")
+        else:
+            print(f"  {key.title()}: {value}")
     print("")
     
     driver = None
@@ -255,13 +293,12 @@ def test_ingreso_exitoso_estudiante():
         # Crear WebDriver usando la estructura global
         driver = get_driver_for_rf("0005")
         wait = WebDriverWait(driver, 10)
-        time.sleep(2)
         
         # Ejecutar pasos del test
         if not navigate_to_courses(driver):
             return False
             
-        if not click_enroll_button(driver, wait):
+        if not click_enroll_button(driver):
             return False
             
         if not center_enrollment_table(driver):
@@ -271,25 +308,24 @@ def test_ingreso_exitoso_estudiante():
             return False
         
         # Primera captura de pantalla
-        take_screenshot(driver, "CP-RF-0005-A", "datos-ingresados")
+        take_screenshot(driver, "CP-RF-0005-C", "datos-ingresados-email-invalido")
         
         if not submit_enrollment(driver, wait):
             return False
         
-        time.sleep(3)
         # Segunda captura de pantalla
-        take_screenshot(driver, "CP-RF-0005-A", "resultado-enroll")
+        take_screenshot(driver, "CP-RF-0005-C", "resultado-error-email-invalido")
         
         return verify_and_report_results(driver)
             
     except Exception as e:
-        print("\nTEST CP-RF-0005-A: ERROR CRÍTICO")
+        print("\nTEST CP-RF-0005-C: ERROR CRÍTICO")
         print(f"Error: {e}")
         
         # Captura de pantalla del error
         try:
             if driver:
-                take_screenshot(driver, "CP-RF-0005-A", "error-critico")
+                take_screenshot(driver, "CP-RF-0005-C", "error-critico")
         except Exception:
             pass
             
@@ -307,10 +343,10 @@ def test_ingreso_exitoso_estudiante():
 def main():
     """Función principal para ejecutar el test"""
     print("SUITE DE PRUEBAS RF-0005")
-    print("Caso: CP-RF-0005-A - Ingreso exitoso de datos de estudiante")
+    print("Caso: CP-RF-0005-C - Formato de correo inválido")
     print("=" * 60)
     
-    result = test_ingreso_exitoso_estudiante()
+    result = test_formato_correo_invalido()
     
     print("\n" + "=" * 60)
     if result:
