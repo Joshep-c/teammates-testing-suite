@@ -1,0 +1,52 @@
+# Reporte de Issues (Excel)
+java `
+  "-Dsonar.token=6e0668ccc5c2d84ba04deaf53f9fb613c36d29fc" `
+  "-Dsonar.projectKey=andre98652_teammates-frontend-clean-v2" `
+  "-Dsonar.organizationKey=andre98652" `
+  "-Dreport.type=3" `
+  "-Duser.locale=es" `
+  "-Doutput=issues_report_frontend_v2.xlsx" `
+  -jar .\bitegarden-sonarcloud-report-1.8.1.jar
+
+
+# Reporte de Deuda Técnica (PDF)
+java `
+  "-Dsonar.token=6e0668ccc5c2d84ba04deaf53f9fb613c36d29fc" `
+  "-Dsonar.projectKey=andre98652_teammates-frontend-clean-v2" `
+  "-Dsonar.organizationKey=andre98652" `
+  "-Dreport.type=6" `
+  "-Duser.locale=es" `
+  "-Doutput=deuda_tecnica_frontend_v2.pdf" `
+  -jar .\bitegarden-sonarcloud-report-1.8.1.jar
+
+# Reporte Quality Gate (PDF)
+java `
+  "-Dsonar.token=6e0668ccc5c2d84ba04deaf53f9fb613c36d29fc" `
+  "-Dsonar.projectKey=andre98652_teammates-frontend-clean-v2" `
+  "-Dsonar.organizationKey=andre98652" `
+  "-Dreport.type=7" `
+  "-Duser.locale=es" `
+  "-Doutput=quality_gate_frontend_v2.pdf" `
+  -jar .\bitegarden-sonarcloud-report-1.8.1.jar
+
+
+# Reporte de Seguridad (PDF)
+java `
+  "-Dsonar.token=6e0668ccc5c2d84ba04deaf53f9fb613c36d29fc" `
+  "-Dsonar.projectKey=andre98652_teammates-frontend-clean-v2" `
+  "-Dsonar.organizationKey=andre98652" `
+  "-Dreport.type=9" `
+  "-Duser.locale=es" `
+  "-Doutput=seguridad_frontend_v2.pdf" `
+  -jar .\bitegarden-sonarcloud-report-1.8.1.jar
+
+# Reporte General (PDF)
+java `
+  "-Dsonar.token=6e0668ccc5c2d84ba04deaf53f9fb613c36d29fc" `
+  "-Dsonar.projectKey=andre98652_teammates-frontend-clean-v2" `
+  "-Dsonar.organizationKey=andre98652" `
+  "-Dreport.type=2" `
+  "-Duser.locale=es" `
+  "-Doutput=resumen_frontend_v2.pdf" `
+  -jar .\bitegarden-sonarcloud-report-1.8.1.jar
+
