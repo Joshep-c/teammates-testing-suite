@@ -359,13 +359,11 @@ def verify_and_report_results(driver):
     result = verify_duplicate_email_error(driver)
     
     if result["errors"]:
-        print("Errores encontrados (esperados por email duplicado):")
-        for error in result["errors"]:
-            print(f"  • {error}")
+        print("Errores encontrados (esperados por email duplicado)")
     
     if result["success"]:
         print("\nTEST CP-RF-0005-J: EXITOSO - Error de email duplicado detectado correctamente")
-        print("✅ TEAMMATES detectó correctamente: 'Found duplicated emails'")
+        print("TEAMMATES detectó correctamente: 'Found duplicated emails'")
         return True
     else:
         print("\nTEST CP-RF-0005-J: FALLIDO - No se detectó el error de email duplicado esperado")

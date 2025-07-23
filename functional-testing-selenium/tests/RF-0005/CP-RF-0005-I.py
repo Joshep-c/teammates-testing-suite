@@ -298,9 +298,8 @@ def verify_and_report_results(driver):
     result = verify_name_spaces_error(driver)
     
     if result["errors"]:
-        print("Errores encontrados (esperados tras trim):")
-        for error in result["errors"]:
-            print(f"  • {error}")
+        print("Errores encontrados (esperados)")
+
     
     if result["success"]:
         print("\nTEST CP-RF-0005-I: EXITOSO - Error de validación detectado correctamente (espacios tratados como vacío)")

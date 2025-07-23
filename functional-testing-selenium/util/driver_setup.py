@@ -185,13 +185,14 @@ def get_driver(use_saved_session=True, cookie_type="general", debug_port=None):
     # Script para evitar detección
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     
+    """ 
     # Cargar cookies si está habilitado
     if use_saved_session:
         if load_cookies(driver, cookie_type):
             print(f"Sesión {cookie_type} restaurada desde cookies")
         else:
             print("No se pudo restaurar sesión, se requerirá login manual")
-    
+    """
     return driver
 
 def get_driver_for_rf(rf_number, use_saved_session=True):

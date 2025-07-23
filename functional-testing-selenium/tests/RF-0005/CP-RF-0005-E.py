@@ -348,6 +348,8 @@ def test_comentarios_en_blanco():
         if not submit_enrollment(driver, wait):
             return False
         
+        time.sleep(5)
+
         # Segunda captura de pantalla
         take_screenshot(driver, "CP-RF-0005-E", "resultado-exitoso-comentarios-vacios")
         

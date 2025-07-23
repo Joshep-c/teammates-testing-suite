@@ -283,16 +283,6 @@ def verify_and_report_results(driver):
     """Verificar y reportar resultados del enrollment con caracteres especiales"""
     result = verify_successful_enrollment_special_chars(driver)
     
-    if result["messages"]:
-        print("Mensajes de éxito:")
-        for msg in result["messages"]:
-            print(f"  • {msg}")
-    
-    if result["errors"]:
-        print("Errores encontrados (no esperados para caracteres especiales válidos):")
-        for error in result["errors"]:
-            print(f"  • {error}")
-    
     if result["success"] and not result["errors"]:
         print("\nTEST CP-RF-0005-H: EXITOSO - Caracteres especiales aceptados correctamente")
         return True
@@ -302,8 +292,6 @@ def verify_and_report_results(driver):
 
 def test_caracteres_especiales_en_campos():
     print("Datos de prueba con caracteres especiales:")
-    for key, value in STUDENT_DATA.items():
-        print(f"  {key.title()}: {value}")
     print("\nCaracteres especiales incluidos: María, O'Connor, ½, α, éxito")
     print("")
     

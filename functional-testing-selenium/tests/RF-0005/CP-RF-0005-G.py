@@ -295,9 +295,7 @@ def verify_and_report_results(driver):
     result = verify_name_length_error(driver)
     
     if result["errors"]:
-        print("Errores encontrados (esperados):")
-        for error in result["errors"]:
-            print(f"  • {error}")
+        print("Errores encontrados (esperados)")
     
     if result["success"]:
         print("\nTEST CP-RF-0005-G: EXITOSO - Error de longitud de nombre detectado correctamente")

@@ -168,7 +168,7 @@ def verify_student_enrollment_result_mejorado(driver):
 def navigate_to_courses(driver):
     """Navegar a la página de cursos"""
     driver.get(TEST_URL)
-    time.sleep(3)
+    time.sleep(4)
     return True
 
 def click_enroll_button(driver, wait):
@@ -276,7 +276,7 @@ def test_ingreso_exitoso_estudiante():
         if not submit_enrollment(driver, wait):
             return False
         
-        time.sleep(3)
+        time.sleep(4)
         # Segunda captura de pantalla
         take_screenshot(driver, "CP-RF-0005-A", "resultado-enroll")
         

@@ -274,9 +274,6 @@ def submit_enrollment(driver, wait):
             if result_found:
                 break
                 
-            # Imprimir progreso cada 5 segundos
-            if attempt % 5 == 4:
-                print(f"Esperando resultados del enrollment... ({attempt + 1}/{max_wait}s)")
         
         if not result_found:
             print("Advertencia: No se detectaron resultados del enrollment después de 20s")
@@ -290,17 +287,6 @@ def verify_and_report_results(driver):
     """Verificar y reportar resultados del enrollment con nombre de 100 caracteres"""
     result = verify_successful_enrollment_long_name(driver)
     
-    # Mostrar resultados
-    if result["messages"]:
-        print("Mensajes de éxito:")
-        for msg in result["messages"]:
-            print(f"  • {msg}")
-    
-    if result["errors"]:
-        print("Errores encontrados (no esperados para 100 caracteres):")
-        for error in result["errors"]:
-            print(f"  • {error}")
-    
     # Resultado final
     if result["success"] and not result["errors"]:
         print("\nTEST CP-RF-0005-F: EXITOSO - Nombre de 100 caracteres aceptado correctamente")
@@ -311,11 +297,6 @@ def verify_and_report_results(driver):
 
 def test_nombre_limite_superior():
     print("Datos de prueba:")
-    for key, value in STUDENT_DATA.items():
-        if key == "name":
-            print(f"  {key.title()}: {value[:50]}... [100 caracteres exactos] - Caso de prueba")
-        else:
-            print(f"  {key.title()}: {value}")
     print(f"\nLongitud del nombre: {len(STUDENT_DATA['name'])} caracteres")
     print("")
     
